@@ -63,7 +63,7 @@ int main(int argn, char **argv)
                     endTime.tv_usec -= startTime.tv_usec;
                     endTime.tv_sec  -= startTime.tv_sec;
                 }
-                printf("use time: %d.%04d S\n", endTime.tv_sec, endTime.tv_usec/1000);
+                printf("use time: %d.%03d S\n", endTime.tv_sec, endTime.tv_usec/1000);
                 sleep(10);
                 close(sockfd);
                 return 0;

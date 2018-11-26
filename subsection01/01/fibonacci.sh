@@ -1,16 +1,18 @@
 #!/bin/bash
 fb0=0
 fb1=1
-maxNameLen=4
+#maxNameLen=4
 for (( i=1; i <= 45; i++))
 do
-	nameLen=$(expr length "$i")
-	fileName=$i.bin
-	while [ $nameLen -lt $maxNameLen ]
-	do
-		fileName=0$fileName
-		nameLen=$[ $nameLen + 1 ]
-	done
+	
+#	nameLen=$(expr length "$i")
+#	fileName=$i.bin
+#	while [ $nameLen -lt $maxNameLen ]
+#	do
+#		fileName=0$fileName
+#		nameLen=$[ $nameLen + 1 ]
+#	done
+	fileName=$(printf "%04d.bin" $i)
 	
 	if [ x$1 = x"--clean" ]
 	then

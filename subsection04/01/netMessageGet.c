@@ -4,6 +4,7 @@
 #include <sys/ioctl.h>   //#include <unistd.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 
 int main(int argn, char **argv)
 {
@@ -12,14 +13,22 @@ int main(int argn, char **argv)
     struct ifconf ifc;
     int ifNum;
 
+    if(argn != 2){
+        printf("input param error!\n");
+        return 0;
+    }
+
     fd = socket(AF_INET, SOCK_DGRAM, 0);
 
     ifc.ifc_len = sizeof(buf);
     ifc.ifc_buf = (caddr_t)buf;
     if (!ioctl(fd, SIOCGIFCONF, (char *)&ifc)){
         ifNum = ifc.ifc_len / sizeof(struct ifreq);
-        printf("interface Num = %d\n", ifNum);
+ //       printf("interface Num = %d\n", ifNum);
         while(ifNum -- > 0){
+            if(strcmp(argv[1], buf[ifNum].ifr_name) != 0)
+                continue;
+
             printf("net name: %s\n", buf[ifNum].ifr_name);
 
             struct ifreq ifrCopy = buf[ifNum];
@@ -66,10 +75,14 @@ int main(int argn, char **argv)
                     (char *)inet_ntoa(((struct sockaddr_in *)&(buf[ifNum].ifr_netmask))->sin_addr));
                 printf("device subnetMask: %s\n", subnetMask);
             } else
-                printf("ioctl: SIOCGIFNETMASK error!\n");
+                printf("ioctl: SIOCGIFNETMASK error!\n");  
+
+            close(fd);
+            return 0;       
         }
     }
 
+    printf("%s not find\n", argv[1]);
     close(fd);
     return 0;
 }

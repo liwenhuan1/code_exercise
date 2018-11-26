@@ -91,7 +91,7 @@ int main(int argn, char **argv)
                 }
 
                 if(--nReady <= 0)
-                    continue;
+                    break;
             }
         }
     }

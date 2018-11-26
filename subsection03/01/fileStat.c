@@ -8,6 +8,7 @@
 #define SIZE_1M      (1024 * 1024)
 
 static char pathBuff[4096];
+static int fileSize1MCnt;
 
 size_t fileStat(char *path)
 {
@@ -51,7 +52,8 @@ size_t fileStat(char *path)
     }
 
     if(statBuf.st_size > SIZE_1M)
-        printf("%s\n", path);
+        fileSize1MCnt ++;
+//        printf("%s\n", path);
     return statBuf.st_size; 
 
 //    return 0;
@@ -64,6 +66,8 @@ int main(int argn, char **argv)
     if(argn != 2)
         printf("parameter error!\n");
     
+    fileSize1MCnt = 0;
     size_t sumSize = fileStat(argv[1]);
     printf("the all file size: %ld\n", sumSize);
+    printf("the file size greater than 1M count: %d\n", fileSize1MCnt);
 }

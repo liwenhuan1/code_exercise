@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
+#include <unistd.h>
 
 static void SignalProcess(int signo)
 {
@@ -11,24 +12,44 @@ static void SignalProcess(int signo)
 }
 
 
+static void intervalHello(int signo)
+{
+    alarm(1);
+    if(signo == SIGALRM)
+        printf("hello\n");
+}
+
 int main(int argn, char** argv)
 {
     struct sigaction act;
     
     act.sa_handler = SignalProcess;
     sigemptyset(&act.sa_mask);
-    sigaddset(&act.sa_mask, SIGQUIT);  //&act.sa_mask  !&act
+    sigaddset(&act.sa_mask, SIGQUIT);  
     sigaddset(&act.sa_mask, SIGTERM);
+    sigaddset(&act.sa_mask, SIGALRM);
     act.sa_flags = 0;
 
     if(sigaction(SIGQUIT, &act, NULL) < 0)
-        printf("set signal hander error!\n");
+        printf("set SIGQUIT error!\n");
 
     if(sigaction(SIGTERM, &act, NULL) < 0)
-        printf("set signal hander error!\n");
+        printf("set SIGTERM error!\n");
     
+
+    struct sigaction intervalAct;
+    intervalAct.sa_handler = intervalHello;
+    sigemptyset(&intervalAct.sa_mask);
+    sigaddset(&intervalAct.sa_mask, SIGQUIT);  
+    sigaddset(&intervalAct.sa_mask, SIGTERM);
+    act.sa_flags = 0;
+    if(sigaction(SIGALRM, &intervalAct, NULL) < 0)
+        printf("set SIGALRM error!\n");
+
+    alarm(1);
+
     while(1){
-        printf("hello\n");
-        sleep(1);
+//        printf("hello\n");
+        sleep(10);
     }
 }
