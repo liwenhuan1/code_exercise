@@ -13,42 +13,53 @@
 
 int main(int argn, char **argv)
 {
-    int sockfd;
-    struct sockaddr_in serverSock;
-    char buf[BUFSIZ];   
-    ssize_t nRead;
-    
-    sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    if(sockfd <= 0)
+    int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    if (sockfd == -1) {
         printf("socket error!\n");
+        return 0;
+    }
 
+    struct sockaddr_in serverSock;
     memset(&serverSock, 0, sizeof(serverSock));
     serverSock.sin_family = AF_INET;
     inet_aton(SERVER_IP_ADDR, &serverSock.sin_addr);
     serverSock.sin_port = htons(SERVER_PORT);
 
-    connect(sockfd, (struct sockaddr*)&serverSock, sizeof(serverSock));
-//    if(out != 0)
-//        printf("connect error!\n");
-    
-//    printf("connect success! sockfd = %d\n", sockfd);
-    write(sockfd, "ping", 5);
+    if (connect(sockfd, (struct sockaddr*)&serverSock, sizeof(serverSock)) != 0) {
+        printf("connect error!\n");
+        close(sockfd);
+        return 0;
+    }
 
+    const char sendMsg[] = "ping\n";
+    const char recvMsg[] = "pong\n";
+    if (write(sockfd, sendMsg, sizeof(sendMsg)) <= 0) {
+        printf("write sockfd error!\n");
+        close(sockfd);
+        return 0;
+    }
+
+    char buf[BUFSIZ];
+    ssize_t nRead;
     while(1){
-        if((nRead = read(sockfd, buf, BUFSIZ)) > 0){
-            write(STDOUT_FILENO, buf, nRead);
-            if(strcmp(buf, "pong") == 0){
+        if ((nRead = read(sockfd, buf, BUFSIZ)) > 0) {
+            buf[nRead] = 0;
+            printf("%s", buf);
+            if (strcmp(buf, recvMsg) == 0) {
                 close(sockfd);
                 return 0;
             } else {
                 sleep(2);
-                write(sockfd, "ping", 5);
+                if (write(sockfd, sendMsg, sizeof(sendMsg)) <= 0) {
+                    printf("write sockfd error!\n");
+                    close(sockfd);
+                    return 0;
+                }
             }
         } else {
-            printf("connect error! close!\n");
+            printf("read error! close fd!\n");
             close(sockfd);
             return 0;
         }
     }
-
 }
