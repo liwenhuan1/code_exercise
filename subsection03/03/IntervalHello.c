@@ -8,17 +8,13 @@ static void SignalProcess(int signo)
     if ((signo == SIGQUIT) || (signo == SIGTERM)) {
         printf("Bye\n");
         exit(0);
-    }
-}
-
-
-static void IntervalHello(int signo)
-{
-    if (signo == SIGALRM) {
+    } else if (signo == SIGALRM) {
         alarm(1);
         printf("hello\n");
     }
 }
+
+
 
 int main(int argn, char** argv)
 {
@@ -37,20 +33,12 @@ int main(int argn, char** argv)
     if (sigaction(SIGTERM, &act, NULL) < 0)
         printf("set SIGTERM error!\n");
 
-
-    struct sigaction intervalAct;
-    intervalAct.sa_handler = IntervalHello;
-    sigemptyset(&intervalAct.sa_mask);
-    sigaddset(&intervalAct.sa_mask, SIGQUIT);
-    sigaddset(&intervalAct.sa_mask, SIGTERM);
-    act.sa_flags = 0;
-    if (sigaction(SIGALRM, &intervalAct, NULL) < 0)
+    if (sigaction(SIGALRM, &act, NULL) < 0)
         printf("set SIGALRM error!\n");
 
     alarm(1);
 
     while(1){
-//        printf("hello\n");
-        sleep(10);
+        pause();
     }
 }

@@ -48,13 +48,6 @@ int main(int argn, char **argv)
             if (strcmp(buf, recvMsg) == 0) {
                 close(sockfd);
                 return 0;
-            } else {
-                sleep(2);
-                if (write(sockfd, sendMsg, sizeof(sendMsg)) <= 0) {
-                    printf("write sockfd error!\n");
-                    close(sockfd);
-                    return 0;
-                }
             }
         } else {
             printf("read error! close fd!\n");

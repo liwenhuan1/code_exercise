@@ -11,7 +11,6 @@ int main(int argn, char **argv)
 {
     char sendMsg[] = "hello, my son!\n";
     char recvMsg[] = "hello, my father!\n";
-    char errorMsg[] = "what?\n";
 
     mqd_t mqdr = mq_open("/testMqueue", O_RDWR|O_CREAT, S_IRUSR|S_IWUSR, NULL);
     if (mqdr <= 0) {
@@ -40,8 +39,6 @@ int main(int argn, char **argv)
                     mq_close(mqdr);
                     free(msgBuffer);
                     return 0;
-                } else {
-                    mq_send(mqdr, errorMsg, sizeof(errorMsg), 1);
                 }
             }
         }
@@ -55,8 +52,6 @@ int main(int argn, char **argv)
                     mq_unlink("/testMqueue");
                     free(msgBuffer);
                     return 0;
-                } else {
-                    mq_send(mqdr, sendMsg, sizeof(sendMsg), 1);
                 }
             }
         }

@@ -1,10 +1,10 @@
 CFLAGS  = -Wall -O2
 
-TARGET  = userGetTime
+TARGET  = UserGetTime
 
 all: $(TARGET)
 
-userGetTime: userGetTime.c
+UserGetTime: UserGetTime.c
 	$(CC) $(CFLAGS) $< -o $@
 	rm -rf *.o
 

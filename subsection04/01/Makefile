@@ -1,10 +1,10 @@
 CFLAGS  = -Wall -O2
 
-TARGET  = netMessageGet
+TARGET  = NetMessageGet
 
 all: $(TARGET)
 
-netMessageGet: netMessageGet.c
+NetMessageGet: NetMessageGet.c
 	$(CC) $(CFLAGS) $< -o $@
 	rm -rf *.o
 

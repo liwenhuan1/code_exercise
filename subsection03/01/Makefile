@@ -1,10 +1,10 @@
 CFLAGS  = -Wall -O2
 
-TARGET  = fileStat
+TARGET  = FileStat
 
 all: $(TARGET)
 
-fileStat: fileStat.c
+FileStat: FileStat.c
 	$(CC) $(CFLAGS) $< -o $@ 
 	rm -rf *.o
 

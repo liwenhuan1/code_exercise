@@ -12,7 +12,7 @@ fileStat(){
             if [ x$file == x'.' ] || [ x$file == x'..' ]
             then
                 continue
-            else 
+            else
                 fileStat $1'/'$file
             fi
         done

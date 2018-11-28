@@ -1,11 +1,15 @@
 CFLAGS  = -Wall -O2
 
-TARGET  = selfIncrease
+TARGET  = SelfIncC SelfIncCXX
 
 all: $(TARGET)
 
-selfIncrease: selfIncrease.c
+SelfIncC: SelfInc.c
 	$(CC) $(CFLAGS) $< -o $@ -lpthread
+	rm -rf *.o
+
+SelfIncCXX: SelfInc.cc
+	$(CXX) $(CXXFLAGS) $< -o $@ -std=c++11 -lpthread
 	rm -rf *.o
 
 clean:

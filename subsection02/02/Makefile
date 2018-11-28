@@ -1,10 +1,10 @@
 CFLAGS  = -Wall -O2
 
-TARGET  = SortInput
+TARGET  = SortLocale
 
 all: $(TARGET)
 
-SortInput: SortInput.c
+SortLocale: SortLocale.c
 	$(CC) $(CFLAGS) $< -o $@ 
 	rm -rf *.o
 

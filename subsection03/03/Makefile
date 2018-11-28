@@ -1,10 +1,10 @@
 CFLAGS  = -Wall -O2
 
-TARGET  = intervalHello
+TARGET  = IntervalHello
 
 all: $(TARGET)
 
-intervalHello: intervalHello.c
+IntervalHello: IntervalHello.c
 	$(CC) $(CFLAGS) $< -o $@
 	rm -rf *.o
 

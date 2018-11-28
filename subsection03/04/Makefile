@@ -1,10 +1,10 @@
 CFLAGS  = -Wall -O2
 
-TARGET  = testMqueue
+TARGET  = TestMqueue
 
 all: $(TARGET)
 
-testMqueue: testMqueue.c
+TestMqueue: TestMqueue.c
 	$(CC) $(CFLAGS) $< -o $@ -lrt
 	rm -rf *.o
 

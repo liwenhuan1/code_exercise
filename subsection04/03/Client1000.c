@@ -137,16 +137,6 @@ int main(int argn, char **argv)
 
                         waitCloseClient[i].closeTick = sysTick + (DELAY_CLOSE_TIME/SYS_TICK);
                         client[i].fd = -1;
-//                        close(client[i].fd);
-//                        aliveClientNum --;
-                    } else {
-                        if (write(client[i].fd, sendMsg, sizeof(sendMsg)) <= 0) {
-                            printf("client[%d] write error! close!\n", i);
-                            close(client[i].fd);
-                            client[i].fd = -1;
-                            aliveClientNum --;
-                            waitCloseClient[i].fd = -1;
-                        }
                     }
                 } else {
                     printf("client[%d] read error! close!\n", i);
