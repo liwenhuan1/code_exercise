@@ -9,7 +9,7 @@ SelfIncC: SelfInc.c
 	rm -rf *.o
 
 SelfIncCXX: SelfInc.cc
-	$(CXX) $(CXXFLAGS) $< -o $@ -std=c++11 -lpthread
+	$(CXX) $(CXXFLAGS) $< -o $@ -std=c++11 -pthread
 	rm -rf *.o
 
 clean:

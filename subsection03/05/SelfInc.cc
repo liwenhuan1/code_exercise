@@ -12,64 +12,23 @@
 #define INC_S             0x08
 #define INC_ALL           (INC_P | INC_Q | INC_R | INC_S)
 
-int64_t p = 0;
-int64_t q = 0;
-int64_t r = 0;
-int64_t s = 0;
-
-std::atomic<int> mutexp;
-std::atomic<int> mutexq;
-std::atomic<int> mutexr;
-std::atomic<int> mutexs;
+std::atomic<int64_t> p;
+std::atomic<int64_t> q;
+std::atomic<int64_t> r;
+std::atomic<int64_t> s;
 
 void ThreadWork(int param)
 {
-    int64_t autoIncCntp = 0;
-    int64_t autoIncCntq = 0;
-    int64_t autoIncCntr = 0;
-    int64_t autoIncCnts = 0;
-
-    while (param & INC_ALL) {
-        if (param & INC_P) {
-            if (mutexp.fetch_add(1) != 0)
-                mutexp --;
-            else {
-                p ++;
-                mutexp --;
-                if (++autoIncCntp >= INCREASE_CNT)
-                    param &= ~INC_P;
-            }
-        }
-        if (param & INC_Q) {
-            if (mutexq.fetch_add(1) != 0)
-                mutexq --;
-            else {
-                q ++;
-                mutexq --;
-                if (++autoIncCntq >= INCREASE_CNT)
-                    param &= ~INC_Q;
-            }
-        }
-        if (param & INC_R) {
-            if (mutexr.fetch_add(1) != 0)
-                mutexr --;
-            else {
-                r ++;
-                mutexr --;
-                if (++autoIncCntr >= INCREASE_CNT)
-                    param &= ~INC_R;
-            }
-        }
-        if (param & INC_S) {
-            if (mutexs.fetch_add(1) != 0)
-                mutexs --;
-            else {
-                s ++;
-                mutexs --;
-                if (++autoIncCnts >= INCREASE_CNT)
-                    param &= ~INC_S;
-            }
-        }
+    uint64_t i;
+    for (i = 0; i < INCREASE_CNT; i++) {
+        if (param & INC_P)
+            p ++;
+        if (param & INC_Q)
+            q ++;
+        if (param & INC_R)
+            r ++;
+        if (param & INC_S)
+            s ++;
     }
 }
 
@@ -81,10 +40,10 @@ int main()
     param[2] = (INC_P | INC_R | INC_S);
     param[3] = (INC_Q | INC_S);
 
-    mutexp = 0;
-    mutexq = 0;
-    mutexr = 0;
-    mutexs = 0;
+    p = 0;
+    q = 0;
+    r = 0;
+    s = 0;
 
     struct timeval startTime, endTime;
     gettimeofday(&startTime, NULL);
@@ -107,42 +66,3 @@ int main()
     std::cout << "consume time = " << consumeTime << "ms" << std::endl;
     return 0;
 }
-
-/*
-void ThreadWork(int param)
-{
-    for (int i = 0; i < INCREASE_CNT; i++) {
-        if (param & INC_P) {
-            while (mutexp.fetch_add(1) != 0) {
-                mutexp --;
-            }
-            p ++;
-            mutexp --;
-        }
-
-        if (param & INC_Q) {
-            while (mutexq.fetch_add(1) != 0) {
-                mutexq --;
-            }
-            q ++;
-            mutexq --;
-        }
-
-        if (param & INC_R) {
-            while (mutexr.fetch_add(1) != 0) {
-                mutexr --;
-            }
-            r ++;
-            mutexr --;
-        }
-
-        if (param & INC_S) {
-            while (mutexs.fetch_add(1) != 0) {
-                mutexs --;
-            }
-            s ++;
-            mutexs --;
-        }
-    }
-}
-*/

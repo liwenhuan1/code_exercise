@@ -5,10 +5,27 @@
 
 #define INIT_LINE         2000
 
+
 int compare(const void *a, const void *b)
 {
-    return -strcoll((char *)a, (char *)b);
+    return -strcoll(*(char **)a, *(char **)b);
 }
+
+/*
+void FileLineSortLocale(char **buffer, int n)
+{
+    int i, j;
+    for (i = 0; i < (n - 1); i ++) {
+        for(j = i + 1; j < n; j++) {
+            if(strcoll(buffer[i], buffer[j]) > 0) {
+                char *tmp = buffer[i];
+                buffer[i] = buffer[j];
+                buffer[j] = tmp;
+            }
+        }
+    }
+}
+*/
 
 int main(int argn, char **argv)
 {
@@ -19,7 +36,6 @@ int main(int argn, char **argv)
     char *ptr = setlocale(LC_COLLATE, "zh_CN.utf8");
     if ((ptr == NULL) || (strcmp(ptr, "zh_CN.utf8") != 0))
         printf("setlocale zh_CN.utf8 error!\n");
-//    printf("LC_COLLATE = %s\n", ptr);
 
     FILE *file = fopen(argv[1], "r");
     if (file == NULL) {
@@ -54,15 +70,14 @@ int main(int argn, char **argv)
         }
 
         strcpy(fileBuff[realLine], lineBuff);
- //       printf("%s", fileBuff[realLine]);
         realLine ++;
     }
 
+//    FileLineSortLocale(fileBuff, realLine);
     qsort(fileBuff, realLine, sizeof(char *), compare);
     for (int i = 0; i < realLine; i++)
         printf("%s", fileBuff[i]);
 
-    //
 THE_END:
     for (int i = 0; i < realLine; i++) {
         if (fileBuff[i])
